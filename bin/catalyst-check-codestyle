@@ -26,8 +26,6 @@ USAGE
 # ---- environment variables
 
 ROOT="$(git rev-parse --show-toplevel)"
-builtin cd "${ROOT}" || exit 1
-
 CONFIG="${ROOT}/setup.cfg"
 FILES=""
 while (( "$#" )); do
@@ -49,9 +47,11 @@ while (( "$#" )); do
       ;;
   esac
 done
+
+# if `FILES` unspecified check all python files in git repo
 if [[ -z "${FILES}" ]]; then
-  # if `FILES` unspecified check all python files
   shopt -s globstar  # allow ** for recursive matches
+  builtin cd "${ROOT}" || exit 1
   FILES=**/*.py
 fi
 
