@@ -1,1 +1,1 @@
-# codestyle
+# Catalyst.Codestyle
