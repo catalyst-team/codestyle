@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+
+# Cause the script to exit if a single command fails
+set -e  # o pipefail -v
+
+usage()
+{
+  cat << USAGE >&2
+usage: $(basename "$0") [-h] [--config CONFIG] [files [files ...]]
+
+Python code style checker
+
+positional arguments:
+files                   files that need to be checked, all files\
+ with \`.py\` extension will be checked if no files are specified
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --config              path to the config file, \`setup.cfg\` at the root\
+ of git repository is used when no config is specified
+USAGE
+  exit 1
+}
+
+
+# ---- environment variables
+
+ROOT="$(git rev-parse --show-toplevel)"
+builtin cd "${ROOT}" || exit 1
+
+CONFIG="${ROOT}/setup.cfg"
+FILES=""
+while (( "$#" )); do
+  case "$1" in
+    --config)
+      CONFIG=$2
+      shift 2
+      ;;
+    -h|--help)
+      usage
+      ;;
+    -*|--*=) # unsupported flags
+      echo "Error: Unsupported flag $1" >&2
+      exit 1
+      ;;
+    *) # preserve positional arguments
+      FILES="${FILES} $1"
+      shift
+      ;;
+  esac
+done
+if [[ -z "${FILES}" ]]; then
+  # if `FILES` unspecified check all python files
+  shopt -s globstar  # allow ** for recursive matches
+  FILES=**/*.py
+fi
+
+
+# ---- code checking
+
+# test to make sure the code is isort compliant
+isort --check-only --settings-path ${CONFIG} -- ${FILES}
+
+# stop the build if there are any unexpected flake8 issues
+flake8 --count --show-source --statistics --config ${CONFIG} -- ${FILES}
+
+# test to make sure the code is yapf compliant
+yapf --diff --recursive --parallel --style ${CONFIG} -- ${FILES}
