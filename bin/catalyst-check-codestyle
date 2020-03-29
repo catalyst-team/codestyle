@@ -16,8 +16,8 @@ files                   files that need to be checked, all files\
 
 optional arguments:
   -h, --help            show this help message and exit
-  --config              path to the config file, \`setup.cfg\` at the root\
- of git repository is used when no config is specified
+  -l, --line-length INT maximum length that any line may be
+  --ignore ERRORS       specify a list of codes to ignore
 USAGE
   exit 1
 }
@@ -25,13 +25,18 @@ USAGE
 
 # ---- environment variables
 
-ROOT="$(git rev-parse --show-toplevel)"
-CONFIG="${ROOT}/setup.cfg"
+LINE_LENGTH=80
+IGNORE="D100,D104,D200,D204,D205,D301,D400,D401,D402,D412,D413,E731,W503,W504"
 FILES=""
+
 while (( "$#" )); do
   case "$1" in
-    --config)
-      CONFIG=$2
+    -l|--line-length)
+      LINE_LENGTH=$2
+      shift 2
+      ;;
+    --ignore)
+      IGNORE=$2
       shift 2
       ;;
     -h|--help)
@@ -50,8 +55,10 @@ done
 
 # if `FILES` unspecified check all python files in git repo
 if [[ -z "${FILES}" ]]; then
-  shopt -s globstar  # allow ** for recursive matches
+  ROOT="$(git rev-parse --show-toplevel)"
   builtin cd "${ROOT}" || exit 1
+
+  shopt -s globstar  # allow ** for recursive matches
   FILES=**/*.py
 fi
 
@@ -59,10 +66,24 @@ fi
 # ---- code checking
 
 # test to make sure the code is isort compliant
-isort --check-only --settings-path ${CONFIG} -- ${FILES}
+catalyst-codestyle-isort --check-only --diff \
+    --line-width "${LINE_LENGTH}" \
+    -- ${FILES}
+
+# test to make sure the code is black compliant
+black --diff --check --line-length "${LINE_LENGTH}" -- ${FILES}
 
 # stop the build if there are any unexpected flake8 issues
-flake8 --count --show-source --statistics --config ${CONFIG} -- ${FILES}
-
-# test to make sure the code is yapf compliant
-yapf --diff --recursive --parallel --style ${CONFIG} -- ${FILES}
+# @TODO: add `--jobs`
+flake8 --count \
+    --exclude=".git,__pycache__,docs/source/conf.py,build,dist" \
+    --extend-ignore "${IGNORE}" \
+    --max-line-length "${LINE_LENGTH}" \
+    --max-doc-length "${LINE_LENGTH}" \
+    --inline-quotes double \
+    --multiline-quotes double \
+    --docstring-quotes double \
+    --max-complexity 16 \
+    --show-source \
+    --statistics \
+    -- ${FILES}

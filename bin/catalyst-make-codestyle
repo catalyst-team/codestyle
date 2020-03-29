@@ -16,8 +16,7 @@ files                   files that need to be checked, all files\
 
 optional arguments:
   -h, --help            show this help message and exit
-  --config              path to the config file, \`setup.cfg\` at the root\
- of git repository is used when no config is specified
+  -l, --line-length INT Maximum length that any line may be
 USAGE
   exit 1
 }
@@ -25,9 +24,9 @@ USAGE
 
 # ---- environment variables
 
-ROOT="$(git rev-parse --show-toplevel)"
-CONFIG="${ROOT}/setup.cfg"
+LINE_LENGTH=80
 FILES=""
+
 while (( "$#" )); do
   case "$1" in
     --config)
@@ -50,13 +49,15 @@ done
 
 # if `FILES` unspecified check all python files in git repo
 if [[ -z "${FILES}" ]]; then
+    ROOT="$(git rev-parse --show-toplevel)"
+    builtin cd "${ROOT}" || exit 1
+
   shopt -s globstar  # allow ** for recursive matches
-  builtin cd "${ROOT}" || exit 1
   FILES=**/*.py
 fi
 
 
 # ---- code formatting
-yapf --in-place --recursive --parallel --style ${CONFIG} -- ${FILES}
+catalyst-codestyle-isort --apply --line-width "${LINE_LENGTH}" -- ${FILES}
 
-isort --apply --settings-path ${CONFIG} -- ${FILES}
+black --line-length "${LINE_LENGTH}" -- ${FILES}
