@@ -13,6 +13,7 @@ from setuptools import Command, find_packages, setup
 
 # Package meta-data.
 NAME = "catalyst-codestyle"
+VERSION = "20.03"
 DESCRIPTION = "Catalyst.Codestyle"
 URL = "https://github.com/catalyst-team/codestyle"
 EMAIL = "scitator@gmail.com"
@@ -31,15 +32,6 @@ def load_readme():
     readme_path = os.path.join(PROJECT_ROOT, "README.md")
     with io.open(readme_path, encoding="utf-8") as f:
         return "\n" + f.read()
-
-
-def load_version():
-    context = {}
-    with open(
-        os.path.join(PROJECT_ROOT, "catalyst_codestyle", "__version__.py")
-    ) as f:
-        exec(f.read(), context)
-    return context["__version__"]
 
 
 class UploadCommand(Command):
@@ -85,7 +77,7 @@ class UploadCommand(Command):
 
 setup(
     name=NAME,
-    version=load_version(),
+    version=VERSION,
     description=DESCRIPTION,
     long_description=load_readme(),
     long_description_content_type="text/markdown",
@@ -103,6 +95,7 @@ setup(
     scripts=[
         "bin/catalyst-check-codestyle",
         "bin/catalyst-make-codestyle",
+        "bin/catalyst-codestyle-isort",
     ],
     install_requires=load_requirements("requirements.txt"),
     include_package_data=True,
