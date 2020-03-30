@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+# Cause the script to exit if a single command fails
+set -e  # o pipefail -v
+
+CATALYST_ECOSYSTEM=catalyst,catalyst_codestyle,catalyst_rl,alchemy,reaction
+
+
+# @TODO: add `--jobs`
+isort --project "${CATALYST_ECOSYSTEM}" \
+    --section-default THIRDPARTY \
+    --no-lines-before STDLIB,LOCALFOLDER \
+    --combine-as \
+    --dont-order-by-type \
+    --force-grid-wrap 0 \
+    --force-sort-within-sections \
+    --lines-between-types 0 \
+    --multi-line 3 \
+    --top typing \
+    --trailing-comma \
+    --use-parentheses \
+    "$@"

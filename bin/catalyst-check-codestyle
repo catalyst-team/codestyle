@@ -1,0 +1,89 @@
+#!/usr/bin/env bash
+
+# Cause the script to exit if a single command fails
+set -e  # o pipefail -v
+
+usage()
+{
+  cat << USAGE >&2
+usage: $(basename "$0") [-h] [--config CONFIG] [files [files ...]]
+
+Python code style checker
+
+positional arguments:
+files                   files that need to be checked, all files\
+ with \`.py\` extension will be checked if no files are specified
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -l, --line-length INT maximum length that any line may be
+  --ignore ERRORS       specify a list of codes to ignore
+USAGE
+  exit 1
+}
+
+
+# ---- environment variables
+
+LINE_LENGTH=80
+IGNORE="D100,D104,D200,D204,D205,D301,D400,D401,D402,D412,D413,E203,E731,W503,W504"
+FILES=""
+
+while (( "$#" )); do
+  case "$1" in
+    -l|--line-length)
+      LINE_LENGTH=$2
+      shift 2
+      ;;
+    --ignore)
+      IGNORE=$2
+      shift 2
+      ;;
+    -h|--help)
+      usage
+      ;;
+    -*|--*=) # unsupported flags
+      echo "Error: Unsupported flag $1" >&2
+      exit 1
+      ;;
+    *) # preserve positional arguments
+      FILES="${FILES} $1"
+      shift
+      ;;
+  esac
+done
+
+# if `FILES` unspecified check all python files in git repo
+if [[ -z "${FILES}" ]]; then
+  ROOT="$(git rev-parse --show-toplevel)"
+  builtin cd "${ROOT}" || exit 1
+
+  shopt -s globstar  # allow ** for recursive matches
+  FILES=**/*.py
+fi
+
+
+# ---- code checking
+
+# test to make sure the code is isort compliant
+catalyst-codestyle-isort --check-only --diff \
+    --line-width "${LINE_LENGTH}" \
+    -- ${FILES}
+
+# test to make sure the code is black compliant
+black --diff --check --line-length "${LINE_LENGTH}" -- ${FILES}
+
+# stop the build if there are any unexpected flake8 issues
+# @TODO: add `--jobs`
+flake8 --count \
+    --exclude=".git,__pycache__,docs/source/conf.py,build,dist" \
+    --extend-ignore "${IGNORE}" \
+    --max-line-length "${LINE_LENGTH}" \
+    --max-doc-length "${LINE_LENGTH}" \
+    --inline-quotes double \
+    --multiline-quotes double \
+    --docstring-quotes double \
+    --max-complexity 16 \
+    --show-source \
+    --statistics \
+    -- ${FILES}

@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+
+# Cause the script to exit if a single command fails
+set -e  # o pipefail -v
+
+usage()
+{
+  cat << USAGE >&2
+usage: $(basename "$0") [-h] [--config CONFIG] [files [files ...]]
+
+Python code formatter
+
+positional arguments:
+files                   files that need to be checked, all files\
+ with \`.py\` extension will be checked if no files are specified
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -l, --line-length INT Maximum length that any line may be
+USAGE
+  exit 1
+}
+
+
+# ---- environment variables
+
+LINE_LENGTH=80
+FILES=""
+
+while (( "$#" )); do
+  case "$1" in
+    --config)
+      CONFIG=$2
+      shift 2
+      ;;
+    -h|--help)
+      usage
+      ;;
+    -*|--*=) # unsupported flags
+      echo "Error: Unsupported flag $1" >&2
+      exit 1
+      ;;
+    *) # preserve positional arguments
+      FILES="${FILES} $1"
+      shift
+      ;;
+  esac
+done
+
+# if `FILES` unspecified check all python files in git repo
+if [[ -z "${FILES}" ]]; then
+    ROOT="$(git rev-parse --show-toplevel)"
+    builtin cd "${ROOT}" || exit 1
+
+  shopt -s globstar  # allow ** for recursive matches
+  FILES=**/*.py
+fi
+
+
+# ---- code formatting
+catalyst-codestyle-isort --apply --line-width "${LINE_LENGTH}" -- ${FILES}
+
+black --line-length "${LINE_LENGTH}" -- ${FILES}
