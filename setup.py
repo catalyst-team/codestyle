@@ -13,7 +13,7 @@ from setuptools import Command, find_packages, setup
 
 # Package meta-data.
 NAME = "catalyst-codestyle"
-VERSION = "20.03"
+VERSION = "20.04"
 DESCRIPTION = "Catalyst.Codestyle"
 URL = "https://github.com/catalyst-team/codestyle"
 EMAIL = "scitator@gmail.com"
@@ -69,7 +69,7 @@ class UploadCommand(Command):
         os.system("twine upload dist/*")
 
         self.status("Pushing git tags…")
-        os.system("git tag v{0}".format(load_version()))
+        os.system("git tag v{0}".format(VERSION))
         os.system("git push --tags")
 
         sys.exit()

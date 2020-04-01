@@ -24,7 +24,7 @@ USAGE
 
 # ---- environment variables
 
-LINE_LENGTH=80
+LINE_LENGTH=79
 FILES=""
 
 while (( "$#" )); do
