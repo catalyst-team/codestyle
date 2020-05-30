@@ -1,0 +1,2 @@
+[tool.nitpick]
+style = "styles/nitpick-style-catalyst.toml"

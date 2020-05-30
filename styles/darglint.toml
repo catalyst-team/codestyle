@@ -10,6 +10,8 @@
 
 # This file is included into base-preset.
 
-["pyproject.toml".tool.black]
-# These values should be placed inside `pyproject.toml` in your repo:
-line-length = 79
+["setup.cfg".darglint]
+# These values should be placed inside `setup.cfg` in your repo:
+docstring_style = "google"
+strictness = "short"
+ignore_regex = "^_(.*)"

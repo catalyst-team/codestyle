@@ -1,0 +1,13 @@
+# `catalyst` style file for nitpick
+
+[nitpick]
+minimum_version = "0.22.0"
+
+[nitpick.styles]
+include = [
+  "file-structure.toml",
+  "flake8.toml",
+  "isort.toml",
+  "darglint.toml",
+  "black.toml"
+]
