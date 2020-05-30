@@ -1,0 +1,25 @@
+["setup.cfg".flake8]
+exclude = ".git,__pycache__,docs/source/conf.py,build,dist"
+ignore = "D100,D104,D200,D204,D205,D301,D400,D401,D402,D412,D413,E203,E731,W503,W504"
+max-line-length = 79
+max-doc-length = 79
+inline-quotes = "double"
+multiline-quotes = "double"
+docstring-quotes = "double"
+
+["setup.cfg".darglint]
+docstring_style=google
+strictness=short
+ignore_regex=^_(.*)
+
+[[".pre-commit-config.yaml".repos]]
+yaml = """
+  - repo: https://gitlab.com/pycqa/flake8
+    rev: 3.8.2
+    hooks:
+      - id: flake8
+        additional_dependencies:
+          - flake8-blind-except
+          - yesqa
+          - wemake-python-styleguide
+"""

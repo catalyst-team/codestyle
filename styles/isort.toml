@@ -1,0 +1,33 @@
+["setup.cfg".isort]
+force_to_top = typing
+skip_glob = **/__init__.py
+line_length = 79
+multi_line_output = 3
+indent = 4
+force_grid_wrap = 0
+default_section = THIRDPARTY
+no_lines_before = STDLIB,LOCALFOLDER
+order_by_type = false
+lines_between_types = 0
+combine_as_imports = true
+include_trailing_comma = true
+use_parentheses = true
+from_first = false
+case_sensitive = false
+# TODO: check if works fine
+filter_files = **/__init__.py
+force_sort_within_sections = true
+# TODO: check if compatable with black
+reverse_relative = true
+
+[[".pre-commit-config.yaml".repos]]
+yaml = """
+  - repo: https://github.com/asottile/seed-isort-config
+    rev: v2.1.0
+    hooks:
+      - id: seed-isort-config
+  - repo: https://github.com/pre-commit/mirrors-isort
+    rev: v4.3.21
+    hooks:
+      - id: isort
+"""
