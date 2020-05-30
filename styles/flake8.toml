@@ -8,9 +8,9 @@ multiline-quotes = "double"
 docstring-quotes = "double"
 
 ["setup.cfg".darglint]
-docstring_style=google
-strictness=short
-ignore_regex=^_(.*)
+docstring_style = "google"
+strictness = "short"
+ignore_regex = "^_(.*)"
 
 [[".pre-commit-config.yaml".repos]]
 yaml = """
