@@ -96,6 +96,7 @@ setup(
     scripts=[
         "bin/catalyst-check-codestyle",
         "bin/catalyst-make-codestyle",
+        "bin/catalyst-codestyle-flake8",
         "bin/catalyst-codestyle-isort",
     ],
     install_requires=load_requirements("requirements.txt"),
