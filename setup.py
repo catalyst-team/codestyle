@@ -13,7 +13,7 @@ from setuptools import Command, find_packages, setup
 
 # Package meta-data.
 NAME = "catalyst-codestyle"
-VERSION = "20.04"
+VERSION = "20.06"
 DESCRIPTION = "Catalyst.Codestyle"
 URL = "https://github.com/catalyst-team/codestyle"
 EMAIL = "scitator@gmail.com"
