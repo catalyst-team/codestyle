@@ -24,14 +24,16 @@ PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 
 
 def load_requirements(filename):
+    """Load package requirements."""
     with open(os.path.join(PROJECT_ROOT, filename), "r") as f:
         return f.read().splitlines()
 
 
 def load_readme():
+    """Load package readme."""
     readme_path = os.path.join(PROJECT_ROOT, "README.md")
     with io.open(readme_path, encoding="utf-8") as f:
-        return "\n" + f.read()
+        return f"\n{f.read()}"
 
 
 class UploadCommand(Command):
@@ -43,15 +45,18 @@ class UploadCommand(Command):
     @staticmethod
     def status(s):
         """Prints things in bold."""
-        print("\033[1m{0}\033[0m".format(s))
+        print(f"\033[1m{s}\033[0m")
 
     def initialize_options(self):
+        """@TODO: Docs. Contribution is welcome"""
         pass
 
     def finalize_options(self):
+        """@TODO: Docs. Contribution is welcome"""
         pass
 
     def run(self):
+        """Run upload command."""
         try:
             self.status("Removing previous builds…")
             rmtree(os.path.join(PROJECT_ROOT, "dist"))
@@ -59,18 +64,14 @@ class UploadCommand(Command):
             pass
 
         self.status("Building Source and Wheel (universal) distribution…")
-        os.system(
-            "{0} setup.py sdist bdist_wheel --universal".format(
-                sys.executable
-            )
-        )
+        os.system(f"{sys.executable} setup.py sdist bdist_wheel --universal")  # noqa: E501, S605
 
         self.status("Uploading the package to PyPI via Twine…")
-        os.system("twine upload dist/*")
+        os.system("twine upload dist/*")  # noqa: S605, S607
 
         self.status("Pushing git tags…")
-        os.system("git tag v{0}".format(VERSION))
-        os.system("git push --tags")
+        os.system(f"git tag v{VERSION}")  # noqa: S605
+        os.system("git push --tags")  # noqa: S605, S607
 
         sys.exit()
 
