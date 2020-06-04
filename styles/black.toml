@@ -5,11 +5,6 @@
 # Make sure to install it with:
 # `pip install nitpick`
 
-# See:
-# https://wemake-python-stylegui.de/en/latest/pages/usage/integrations/nitpick
-
-# This file is included into base-preset.
-
 ["pyproject.toml".tool.black]
 # These values should be placed inside `pyproject.toml` in your repo:
 line-length = 79

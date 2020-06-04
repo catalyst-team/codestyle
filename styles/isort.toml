@@ -5,11 +5,6 @@
 # Make sure to install it with:
 # `pip install nitpick`
 
-# See:
-# https://wemake-python-stylegui.de/en/latest/pages/usage/integrations/nitpick
-
-# This file is included into base-preset.
-
 ["setup.cfg".isort]
 # These values should be placed inside `setup.cfg` in your repo:
 force_to_top = "typing"
