@@ -1,0 +1,5 @@
+[tool.nitpick]
+style = "styles/nitpick-style-catalyst.toml"
+
+[tool.black]
+line-length = 79

@@ -4,9 +4,9 @@
 set -e  # o pipefail -v
 
 CATALYST_ECOSYSTEM=catalyst,catalyst_codestyle,catalyst_rl,alchemy,reaction
-
-
 # @TODO: add `--jobs`
+
+
 isort --project "${CATALYST_ECOSYSTEM}" \
     --section-default THIRDPARTY \
     --no-lines-before STDLIB,LOCALFOLDER \

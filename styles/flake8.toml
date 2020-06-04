@@ -1,0 +1,44 @@
+# `nitpick` specific configuration.
+# `nitpick` ensures that you have the same configuration
+# in your own project.
+
+# Make sure to install it with:
+# `pip install nitpick`
+
+["setup.cfg".flake8]
+# These values should be placed inside `setup.cfg` in your repo:
+
+# C812,C813,C814,C815,C816: ignore `flake8-commas` errors
+# D100: Missing docstring in public module
+# D104: Missing docstring in public package
+# D200: One-line docstring should fit on one line with quotes
+# D205: 1 blank line required between summary line and description
+# D301: Use r""" if any backslashes in a docstring
+# D402: First line should not be the function's "signature"
+# D412: No blank lines allowed between a section header and its content
+# DAR103 type mismatch
+# E203 whitespace before ':'
+# S101 Use of assert detected. The enclosed code will be removed when compiling to optimised byte code.
+# S311 Standard pseudo-random generators are not suitable for security/cryptographic purposes.
+# W0221 Parameters differ from overridden 'add' method
+# W503 line break before binary operator
+# WPS0XX: ignore `wemake-python-styleguide` system errors
+# WPS110 Found wrong variable name
+# WPS111 Found too short name
+# WPS2XX: ignore `wemake-python-styleguide` complexity errors
+# WPS305: Forbids to use f strings
+# WPS430: Forbids to have nested functions
+# WPS431: Forbids to use nested classes
+# WPS433: Forbids to have nested imports in functions
+# WPS5XX: ignore `wemake-python-styleguide` refactoring errors
+# WPS6: ignore `wemake-python-styleguide` oop errors
+ignore = "C812,C813,C814,C815,C816,D100,D104,D200,D204,D205,D301,D400,D401,D402,D412,D413,DAR103,DAR203,E203,E731,E1101,S101,S311,W0221,W503,W504,WPS0,WPS110,WPS111,WPS2,WPS305,WPS420,WPS421,WPS430,WPS431,WPS433,WPS5,WPS6"
+max-line-length = 79
+max-doc-length = 79
+inline-quotes = "double"
+multiline-quotes = "double"
+docstring-quotes = "double"
+convention = "google"
+
+[nitpick.files."setup.cfg"]
+comma_separated_values = ["flake8.ignore"]

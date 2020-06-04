@@ -1,0 +1,10 @@
+# `nitpick` specific configuration.
+# `nitpick` ensures that you have the same configuration
+# in your own project.
+
+# Make sure to install it with:
+# `pip install nitpick`
+
+["pyproject.toml".tool.black]
+# These values should be placed inside `pyproject.toml` in your repo:
+line-length = 79
