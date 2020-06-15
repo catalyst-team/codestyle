@@ -5,6 +5,5 @@
 
 [nitpick.files.present]
 "README.md" = "A project should have `README.md`"
-"requirements.txt" = "A project should have `requirements.txt`"
 ".gitignore" = "A project should have `.gitignore` file"
 "setup.cfg" = "A project should have `setup.cfg` file"
