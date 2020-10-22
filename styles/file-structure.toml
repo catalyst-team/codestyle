@@ -1,9 +1,10 @@
 [nitpick.files.absent]
-".isort.cfg" = "Move values to setup.cfg, section [isort]"
+"darglint" = "Move values to setup.cfg, section [flake8]"
 ".flake8" = "Move values to setup.cfg, section [flake8]"
-"mypy.ini" = "Move values to setup.cfg, section [mypy]"
+".isort.cfg" = "Move values to setup.cfg, section [isort]"
 
 [nitpick.files.present]
 "README.md" = "A project should have `README.md`"
 ".gitignore" = "A project should have `.gitignore` file"
 "setup.cfg" = "A project should have `setup.cfg` file"
+"pyproject.toml" = "A project should have `pyproject.toml` file"
