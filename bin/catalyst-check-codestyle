@@ -6,41 +6,48 @@ set -e  # o pipefail -v
 usage()
 {
   cat << USAGE >&2
-usage: $(basename "$0") [-h] [--config CONFIG] [files [files ...]]
+usage: $(basename "$0") [-h] [-i ERRORS] [-j NUM_JOBS] [-l LINE_LENGTH]\
+ [files [files ...]]
 
 Python code style checker
 
 positional arguments:
-files                   files that need to be checked, all files\
+files                    files that need to be checked, all files\
  with \`.py\` extension will be checked if no files are specified
 
 optional arguments:
-  -h, --help            show this help message and exit
-  -l, --line-length INT maximum length that any line may be
-  --ignore ERRORS       specify a list of codes to ignore
+  -h, --help             show this help message and exit
+  -i, --ignore ERRORS    specify a list of codes to ignore
+  -j, --num-jobs JOBS    number of subprocesses to use to run checks in
+  -l, --line-length INT  maximum length that any line may be
 USAGE
-  exit 1
+  exit 0
 }
 
 
-# ---- environment variables
+# ~ ~ ~ ~ ~ environment variables ~ ~ ~ ~ ~
 
-LINE_LENGTH=79
-IGNORE="C812,C813,C814,C815,C816,D100,D104,D200,D204,D205,D301,D400,D401,D402,D412,D413,DAR003,DAR103,DAR203,E203,E731,E800,E1101,N812,P101,RST201,RST203,RST210,RST213,RST301,RST304,S,W0221,W503,W504,W605,WPS0,WPS100,WPS101,WPS110,WPS111,WPS112,WPS125,WPS2,WPS300,WPS301,WPS305,WPS306,WPS309,WPS317,WPS323,WPS326,WPS331,WPS333,WPS335,WPS336,WPS337,WPS338,WPS342,WPS347,WPS348,WPS349,WPS350,WPS352,WPS402,WPS404,WPS405,WPS408,WPS410,WPS412,WPS414,WPS420,WPS421,WPS425,WPS426,WPS429,WPS430,WPS431,WPS432,WPS433,WPS434,WPS435,WPS440,WPS441,WPS5,WPS6"
 FILES=""
+IGNORE=""
+LINE_LENGTH=79
+NUM_JOBS=0
 
 while (( "$#" )); do
   case "$1" in
-    -l|--line-length)
-      LINE_LENGTH=$2
-      shift 2
+    -h|--help)
+      usage
       ;;
-    --ignore)
+    -i|--ignore)
       IGNORE=$2
       shift 2
       ;;
-    -h|--help)
-      usage
+    -j|--num-jobs)
+      NUM_JOBS=$2
+      shift 2
+      ;;
+    -l|--line-length)
+      LINE_LENGTH=$2
+      shift 2
       ;;
     -*|--*=) # unsupported flags
       echo "Error: Unsupported flag $1" >&2
@@ -53,31 +60,34 @@ while (( "$#" )); do
   esac
 done
 
-# if `FILES` unspecified check all python files in git repo
+# check all python files if `FILES` unspecified
 if [[ -z "${FILES}" ]]; then
-  ROOT="$(git rev-parse --show-toplevel)"
-  builtin cd "${ROOT}" || exit 1
+  # check whole git repo if possible
+  if git rev-parse --git-dir > /dev/null 2>&1; then
+    ROOT="$(git rev-parse --show-toplevel)"
+    builtin cd "${ROOT}" || exit 1
+  fi
 
-  shopt -s globstar  # allow ** for recursive matches
-  FILES=**/*.py
+  FILES=.
 fi
 
 
-# ---- code checking
+# ~ ~ ~ ~ ~ code checking ~ ~ ~ ~ ~
 
 # test to make sure the code is isort compliant
-catalyst-codestyle-isort --check-only --diff \
-  --line-width "${LINE_LENGTH}" \
+# ignore `NUM_JOBS` params, as it turns off `--diff` prints
+LINE_LENGTH="${LINE_LENGTH}" catalyst-codestyle-isort \
+  --diff \
+  --check-only \
   -- ${FILES}
 
 # test to make sure the code is black compliant
-black --diff --check --line-length "${LINE_LENGTH}" -- ${FILES}
+black --check --diff --line-length "${LINE_LENGTH}" -- ${FILES}
 
 # stop the build if there are any unexpected flake8 issues
-catalyst-codestyle-flake8 --ignore "${IGNORE}" \
-  --line-length "${LINE_LENGTH}" \
-  --quotes double \
+IGNORE="${IGNORE}" LINE_LENGTH="${LINE_LENGTH}" catalyst-codestyle-flake8 \
   --show-source \
   --statistics \
   --count \
+  --jobs "${NUM_JOBS}" \
   -- ${FILES}
