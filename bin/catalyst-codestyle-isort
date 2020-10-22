@@ -3,20 +3,28 @@
 # Cause the script to exit if a single command fails
 set -e  # o pipefail -v
 
-CATALYST_ECOSYSTEM=catalyst,catalyst_codestyle,catalyst_rl,alchemy,reaction
-# @TODO: add `--jobs`
+# Force isort to recognize modules as being part of the current python project.
+# Defaults to modules of catalyst ecosystem.
+PROJECT=${PROJECT:="catalyst,catalyst_codestyle,catalyst_rl,alchemy,reaction"}
+
+# The max length of an import line (used for wrapping long imports).
+# Defaults to 79 chars, suggested by PEP.
+LINE_LENGTH=${LINE_LENGTH:=79}
 
 
-isort --project "${CATALYST_ECOSYSTEM}" \
-    --section-default THIRDPARTY \
-    --no-lines-before STDLIB,LOCALFOLDER \
-    --combine-as \
-    --dont-order-by-type \
-    --force-grid-wrap 0 \
-    --force-sort-within-sections \
-    --lines-between-types 0 \
-    --multi-line 3 \
-    --top typing \
-    --trailing-comma \
-    --use-parentheses \
-    "$@"
+isort --project "${PROJECT}" \
+  --combine-as \
+  --dont-order-by-type \
+  --force-grid-wrap 0 \
+  --force-sort-within-sections \
+  --line-width "${LINE_LENGTH}" \
+  --lines-between-types 0 \
+  --multi-line 3 \
+  --no-lines-before STDLIB,LOCALFOLDER \
+  --reverse-relative \
+  --section-default THIRDPARTY \
+  --skip-glob "**/__init__.py" \
+  --top typing \
+  --trailing-comma \
+  --use-parentheses \
+  "$@"

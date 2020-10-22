@@ -6,35 +6,41 @@ set -e  # o pipefail -v
 usage()
 {
   cat << USAGE >&2
-usage: $(basename "$0") [-h] [--config CONFIG] [files [files ...]]
+usage: $(basename "$0") [-h] [-j NUM_JOBS] [-l LINE_LENGTH] [files [files ...]]
 
 Python code formatter
 
 positional arguments:
-files                   files that need to be checked, all files\
+files                    files that need to be checked, all files\
  with \`.py\` extension will be checked if no files are specified
 
 optional arguments:
-  -h, --help            show this help message and exit
-  -l, --line-length INT Maximum length that any line may be
+  -h, --help             show this help message and exit
+  -j, --num-jobs JOBS    number of subprocesses to use to run checks in
+  -l, --line-length INT  maximum length that any line may be
 USAGE
-  exit 1
+  exit 0
 }
 
 
-# ---- environment variables
+# ~ ~ ~ ~ ~ environment variables ~ ~ ~ ~ ~
 
-LINE_LENGTH=79
 FILES=""
+LINE_LENGTH=79
+NUM_JOBS=0
 
 while (( "$#" )); do
   case "$1" in
-    --config)
-      CONFIG=$2
-      shift 2
-      ;;
     -h|--help)
       usage
+      ;;
+    -j|--num-jobs)
+      NUM_JOBS=$2
+      shift 2
+      ;;
+    -l|--line-length)
+      LINE_LENGTH=$2
+      shift 2
       ;;
     -*|--*=) # unsupported flags
       echo "Error: Unsupported flag $1" >&2
@@ -47,17 +53,24 @@ while (( "$#" )); do
   esac
 done
 
-# if `FILES` unspecified check all python files in git repo
+# check all python files if `FILES` unspecified
 if [[ -z "${FILES}" ]]; then
+  # check whole git repo if possible
+  if git rev-parse --git-dir > /dev/null 2>&1; then
     ROOT="$(git rev-parse --show-toplevel)"
     builtin cd "${ROOT}" || exit 1
+  fi
 
-  shopt -s globstar  # allow ** for recursive matches
-  FILES=**/*.py
+  FILES=.
 fi
 
 
-# ---- code formatting
-catalyst-codestyle-isort --apply --line-width "${LINE_LENGTH}" -- ${FILES}
+# ~ ~ ~ ~ ~ code formatting ~ ~ ~ ~ ~
+# fix imports order with isort
+LINE_LENGTH="${LINE_LENGTH}" catalyst-codestyle-isort \
+  --apply \
+  --jobs "${NUM_JOBS}" \
+  -- ${FILES}
 
+# fix codestyle with black
 black --line-length "${LINE_LENGTH}" -- ${FILES}
