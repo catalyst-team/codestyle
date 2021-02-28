@@ -29,7 +29,7 @@ USAGE
 
 FILES=""
 IGNORE=""
-LINE_LENGTH=79
+LINE_LENGTH=99
 NUM_JOBS=0
 
 while (( "$#" )); do

@@ -7,4 +7,4 @@
 
 ["pyproject.toml".tool.black]
 # These values should be placed inside `pyproject.toml` in your repo:
-line-length = 79
+line-length = 99

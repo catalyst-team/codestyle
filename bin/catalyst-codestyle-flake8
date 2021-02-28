@@ -16,8 +16,8 @@ readonly _IGNORE_OTHER="E203,E731,E800,E1101,I,N812,P101,S,W0221,W503,W504,W605"
 IGNORE=${IGNORE:="${_IGNORE_COMMAS},${_IGNORE_DOCSTRINGS},${_IGNORE_DARGLINT},${_IGNORE_RST_DOCSTRINGS},${_IGNORE_WEMAKE},${_IGNORE_OTHER}"}
 
 # Maximum allowed line (and doc) length for the entirety of this run.
-# Defaults to 79 chars, suggested by PEP.
-LINE_LENGTH=${LINE_LENGTH:=79}
+# Defaults to 99 chars, suggested by PEP.
+LINE_LENGTH=${LINE_LENGTH:=99}
 
 # Quote to expect. Defaults to double quote.
 QUOTES=${QUOTES:="double"}
