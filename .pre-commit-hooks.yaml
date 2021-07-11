@@ -1,0 +1,6 @@
+-   id: catalyst-codestyle
+    name: catalyst-codestyle
+    description: 'makes code compatible with `catalyst` code style'
+    entry: catalyst-make-codestyle
+    language: python
+    types: [python]
