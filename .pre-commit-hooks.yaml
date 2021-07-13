@@ -1,0 +1,13 @@
+-   id: catalyst-make-codestyle
+    name: catalyst-make-codestyle
+    description: 'makes code compatible with `catalyst` code style'
+    entry: catalyst-make-codestyle
+    language: python
+    types: [python]
+
+-   id: catalyst-check-codestyle
+    name: catalyst-check-codestyle
+    description: 'checks that the code is `catalyst` code style compliant'
+    entry: catalyst-check-codestyle
+    language: python
+    types: [python]
