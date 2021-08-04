@@ -1,4 +1,5 @@
 # `catalyst` style file for nitpick
+# https://raw.githubusercontent.com/andreoliwa/nitpick/v0.18.0/nitpick-style.toml
 
 [nitpick]
 minimum_version = "0.22.0"
