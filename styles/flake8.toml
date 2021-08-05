@@ -20,4 +20,4 @@ ignore_regex = "^_(.*)"
 class_attributes_order = "field,meta_class,nested_class,magic_method,property_method,static_method,private_method,method,class_method"
 
 [nitpick.files."setup.cfg"]
-comma_separated_values = ["flake8.ignore","class_attributes_order"]
+comma_separated_values = ["flake8.ignore", "flake8.class_attributes_order"]

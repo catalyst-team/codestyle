@@ -5,7 +5,7 @@ set -e  # o pipefail -v
 
 # Force isort to recognize modules as being part of the current python project.
 # Defaults to modules of catalyst ecosystem.
-PROJECT=${PROJECT:="catalyst,catalyst_codestyle,catalyst_rl,alchemy,reaction"}
+PROJECT=${PROJECT:="catalyst,catalyst_codestyle,catalyst_rl,alchemy,reaction,hydra_slayer"}
 
 # The max length of an import line (used for wrapping long imports).
 # Defaults to 99 chars, suggested by PEP.
