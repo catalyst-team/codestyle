@@ -6,8 +6,7 @@ set -e  # o pipefail -v
 usage()
 {
   cat << USAGE >&2
-usage: $(basename "$0") [-h] [-i ERRORS] [-j NUM_JOBS] [-l LINE_LENGTH]\
- [files [files ...]]
+usage: $(basename "$0") [-h] [-l LINE_LENGTH] [files [files ...]]
 
 Python code style checker
 
