@@ -25,7 +25,7 @@ def inject() -> None:
         "skip_glob": ("**/__init__.py",),
         "line_length": line_length,
         "sections": ("STDLIB", "THIRDPARTY", "DL", "FIRSTPARTY", "LOCALFOLDER"),
-        "known_first_party": ("catalyst", "hydra_slayer"),
+        "known_first_party": ("catalyst", "hydra_slayer", "reaction"),
         "multi_line_output": 3,
         "reverse_relative": True,
         "default_section": "THIRDPARTY",

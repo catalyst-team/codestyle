@@ -1,5 +1,4 @@
-from typing import Any, List, Optional, Tuple
-import argparse
+from typing import List, Optional
 import os
 import sys
 
@@ -10,30 +9,24 @@ from flake8.main import application
 class InjectedApplication(application.Application):
     """Flake8 app with updated default values."""
 
-    def parse_preliminary_options(
-        self, *args: Any, **kwargs: Any
-    ) -> Tuple[argparse.Namespace, list]:
-        """Get preliminary options from the CLI, pre-plugin-loading.
+    def register_plugin_options(self) -> None:
+        """Register options provided by plugins to our option manager."""
+        super().register_plugin_options()
 
-        Args:
-            args: command-line arguments passed in directly
-            kwargs: command-line arguments passed in directly
-
-        Returns:
-            populated namespace and list of remaining argument strings
-        """
-        # rewrite default params
-        self.prelim_arg_parser.set_defaults(
+        # rewrite default values for plugins
+        line_length = int(os.environ.get("LINE_LENGTH", "99"))
+        self.option_manager.parser.set_defaults(
+            # flake8
             exclude=(*defaults.EXCLUDE, "build", "dist"),
             ignore=(
                 # flake8
-                # "E203",  # TODO:
+                # "E203",  # TODO: check if should be in ignore list
                 "E731",
                 "W503",
                 "W504",
                 "W605",
                 # flake8-class-attributes-order
-                # "CCE001",  # TODO:
+                # "CCE001",  # TODO: check if should be in ignore list
                 # flake8-docstrings
                 "D100",
                 "D104",
@@ -62,28 +55,16 @@ class InjectedApplication(application.Application):
                 # darglint
                 "DAR003",
                 "DAR103",
-                "DAR203"
+                "DAR203",
                 # pep8-naming
                 "N812",
                 # other ignores
-                # "E1101",  # TODO:
-                # "E800",  # TODO:
-                # "I",  # TODO:
-                # "S",  # TODO:
-                # "W0221",  # TODO:
+                # "E1101",  # TODO: check if should be in ignore list
+                # "E800",  # TODO: check if should be in ignore list
+                # "I",  # TODO: check if should be in ignore list
+                # "S",  # TODO: check if should be in ignore list
+                # "W0221",  # TODO: check if should be in ignore list
             ),
-        )
-
-        return super().parse_preliminary_options(*args, **kwargs)
-
-    def register_plugin_options(self) -> None:
-        """Register options provided by plugins to our option manager."""
-        super().register_plugin_options()
-
-        # rewrite default values for plugins
-        line_length = int(os.environ.get("LINE_LENGTH", "99"))
-        self.option_manager.parser.set_defaults(
-            # flake8
             max_line_length=line_length,
             max_doc_length=line_length,
             # flake8-class-attributes-order
