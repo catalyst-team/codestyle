@@ -20,13 +20,11 @@ class InjectedApplication(application.Application):
             exclude=(*defaults.EXCLUDE, "build", "dist"),
             ignore=(
                 # flake8
-                # "E203",  # TODO: check if should be in ignore list
+                "E203",  # to fix incompatibilities with Black
                 "E731",
                 "W503",
                 "W504",
                 "W605",
-                # flake8-class-attributes-order
-                # "CCE001",  # TODO: check if should be in ignore list
                 # flake8-docstrings
                 "D100",
                 "D104",
@@ -50,7 +48,7 @@ class InjectedApplication(application.Application):
                 "RST213",
                 "RST301",
                 "RST304",
-                # flake8-string-forma
+                # flake8-string-format
                 "P101",
                 # darglint
                 "DAR003",
@@ -58,12 +56,6 @@ class InjectedApplication(application.Application):
                 "DAR203",
                 # pep8-naming
                 "N812",
-                # other ignores
-                # "E1101",  # TODO: check if should be in ignore list
-                # "E800",  # TODO: check if should be in ignore list
-                # "I",  # TODO: check if should be in ignore list
-                # "S",  # TODO: check if should be in ignore list
-                # "W0221",  # TODO: check if should be in ignore list
             ),
             max_line_length=line_length,
             max_doc_length=line_length,
