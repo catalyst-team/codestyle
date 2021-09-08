@@ -53,10 +53,7 @@ setup(
             "catalyst-codestyle-isort=codestyle._isort:main",
         ],
     },
-    scripts=[
-        "bin/catalyst-check-codestyle",
-        "bin/catalyst-make-codestyle",
-    ],
+    scripts=["bin/catalyst-check-codestyle", "bin/catalyst-make-codestyle"],
     install_requires=load_requirements(),
     include_package_data=True,
     license="Apache License 2.0",
