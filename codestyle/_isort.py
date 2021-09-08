@@ -24,8 +24,6 @@ def inject() -> None:
         "force_to_top": ("typing",),
         "skip_glob": ("**/__init__.py",),
         "line_length": line_length,
-        "sections": ("STDLIB", "THIRDPARTY", "DL", "FIRSTPARTY", "LOCALFOLDER"),
-        "known_first_party": ("catalyst", "hydra_slayer", "reaction"),
         "multi_line_output": 3,
         "reverse_relative": True,
         "default_section": "THIRDPARTY",
@@ -36,7 +34,7 @@ def inject() -> None:
         "include_trailing_comma": True,
         "force_grid_wrap": 0,
         "force_sort_within_sections": True,
-        "no_lines_before": ("STDLIB", "LOCALFOLDER"),
+        "no_lines_before": ("STDLIB",),
     }
 
     params_in_config = _get_params_from_config()
