@@ -8,7 +8,7 @@ from setuptools import find_packages, setup
 
 # Package meta-data.
 NAME = "catalyst-codestyle"
-VERSION = "21.07rc0"
+VERSION = "21.09"
 DESCRIPTION = "Catalyst.Codestyle"
 URL = "https://github.com/catalyst-team/codestyle"
 EMAIL = "scitator@gmail.com"
@@ -47,12 +47,13 @@ setup(
         "Source Code": "https://github.com/catalyst-team/codestyle",
     },
     packages=find_packages(exclude=("tests",)),
-    scripts=[
-        "bin/catalyst-check-codestyle",
-        "bin/catalyst-make-codestyle",
-        "bin/catalyst-codestyle-flake8",
-        "bin/catalyst-codestyle-isort",
-    ],
+    entry_points={
+        "console_scripts": [
+            "catalyst-codestyle-flake8=codestyle._flake8:main",
+            "catalyst-codestyle-isort=codestyle._isort:main",
+        ],
+    },
+    scripts=["bin/catalyst-check-codestyle", "bin/catalyst-make-codestyle"],
     install_requires=load_requirements(),
     include_package_data=True,
     license="Apache License 2.0",

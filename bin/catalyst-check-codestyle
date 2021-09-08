@@ -6,8 +6,7 @@ set -e  # o pipefail -v
 usage()
 {
   cat << USAGE >&2
-usage: $(basename "$0") [-h] [-i ERRORS] [-j NUM_JOBS] [-l LINE_LENGTH]\
- [files [files ...]]
+usage: $(basename "$0") [-h] [-l LINE_LENGTH] [files [files ...]]
 
 Python code style checker
 
@@ -17,8 +16,6 @@ files                    files that need to be checked, all files\
 
 optional arguments:
   -h, --help             show this help message and exit
-  -i, --ignore ERRORS    specify a list of codes to ignore
-  -j, --num-jobs JOBS    number of subprocesses to use to run checks in
   -l, --line-length INT  maximum length that any line may be
 USAGE
   exit 0
@@ -28,22 +25,12 @@ USAGE
 # ~ ~ ~ ~ ~ environment variables ~ ~ ~ ~ ~
 
 FILES=""
-IGNORE=""
 LINE_LENGTH=99
-NUM_JOBS=0
 
 while (( "$#" )); do
   case "$1" in
     -h|--help)
       usage
-      ;;
-    -i|--ignore)
-      IGNORE=$2
-      shift 2
-      ;;
-    -j|--num-jobs)
-      NUM_JOBS=$2
-      shift 2
       ;;
     -l|--line-length)
       LINE_LENGTH=$2
@@ -73,21 +60,15 @@ fi
 
 
 # ~ ~ ~ ~ ~ code checking ~ ~ ~ ~ ~
-
-# test to make sure the code is isort compliant
-# ignore `NUM_JOBS` params, as it turns off `--diff` prints
 LINE_LENGTH="${LINE_LENGTH}" catalyst-codestyle-isort \
   --diff \
   --check-only \
   -- ${FILES}
 
-# test to make sure the code is black compliant
 black --check --diff --line-length "${LINE_LENGTH}" -- ${FILES}
 
-# stop the build if there are any unexpected flake8 issues
-IGNORE="${IGNORE}" LINE_LENGTH="${LINE_LENGTH}" catalyst-codestyle-flake8 \
+LINE_LENGTH="${LINE_LENGTH}" catalyst-codestyle-flake8 \
   --show-source \
   --statistics \
   --count \
-  --jobs "${NUM_JOBS}" \
   -- ${FILES}
