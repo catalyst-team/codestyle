@@ -6,7 +6,8 @@ set -e  # o pipefail -v
 usage()
 {
   cat << USAGE >&2
-usage: $(basename "$0") [-h] [-l LINE_LENGTH] [files [files ...]]
+usage: $(basename "$0") [-h] [-l LINE_LENGTH] [--skip-isort] [--skip-black]\
+ [files [files ...]]
 
 Python code formatter
 
@@ -17,6 +18,8 @@ files                    files that need to be checked, all files\
 optional arguments:
   -h, --help             show this help message and exit
   -l, --line-length INT  maximum length that any line may be
+  --skip-isort           skip isorts Python imports formatter
+  --skip-black           skip black Python code formatter
 USAGE
   exit 0
 }
@@ -26,6 +29,8 @@ USAGE
 
 FILES=""
 LINE_LENGTH=79
+SKIP_ISORT=""
+SKIP_BLACK=""
 
 while (( "$#" )); do
   case "$1" in
@@ -35,6 +40,14 @@ while (( "$#" )); do
     -l|--line-length)
       LINE_LENGTH=$2
       shift 2
+      ;;
+    --skip-isort)
+      SKIP_ISORT="true"
+      shift
+      ;;
+    --skip-black)
+      SKIP_BLACK="true"
+      shift
       ;;
     -*|--*=) # unsupported flags
       echo "Error: Unsupported flag $1" >&2
@@ -60,6 +73,10 @@ fi
 
 
 # ~ ~ ~ ~ ~ code formatting ~ ~ ~ ~ ~
-LINE_LENGTH="${LINE_LENGTH}" catalyst-codestyle-isort --apply -- ${FILES}
+if [[ -z "${SKIP_ISORT}" ]]; then
+  LINE_LENGTH="${LINE_LENGTH}" catalyst-codestyle-isort --apply -- ${FILES}
+fi
 
-black --line-length "${LINE_LENGTH}" -- ${FILES}
+if [[ -z "${SKIP_BLACK}" ]]; then
+  black --line-length "${LINE_LENGTH}" -- ${FILES}
+fi
