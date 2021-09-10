@@ -19,7 +19,7 @@ def _get_params_from_config():
 
 def inject() -> None:
     """Updates default values of ``isort``."""
-    line_length = int(os.environ.get("LINE_LENGTH", "99"))
+    line_length = int(os.environ.get("LINE_LENGTH", "79"))
     default_params = {
         "force_to_top": ("typing",),
         "skip_glob": ("**/__init__.py",),

@@ -14,7 +14,7 @@ class InjectedApplication(application.Application):
         super().register_plugin_options()
 
         # rewrite default values for plugins
-        line_length = int(os.environ.get("LINE_LENGTH", "99"))
+        line_length = int(os.environ.get("LINE_LENGTH", "79"))
         self.option_manager.parser.set_defaults(
             # flake8
             exclude=(*defaults.EXCLUDE, "build", "dist"),

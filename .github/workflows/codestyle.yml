@@ -47,7 +47,7 @@ jobs:
 
       - name: Check code-style
         run: |
-          catalyst-check-codestyle
+          catalyst-check-codestyle --line-length 99
 
       - name: Check dependencies compatibility
         run: |
