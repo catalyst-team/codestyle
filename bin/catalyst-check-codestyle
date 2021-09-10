@@ -25,7 +25,7 @@ USAGE
 # ~ ~ ~ ~ ~ environment variables ~ ~ ~ ~ ~
 
 FILES=""
-LINE_LENGTH=99
+LINE_LENGTH=79
 
 while (( "$#" )); do
   case "$1" in
