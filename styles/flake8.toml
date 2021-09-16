@@ -16,7 +16,9 @@ docstring-quotes = "double"
 convention = "google"
 docstring_style = "google"
 strictness = "short"
+
+["setup.cfg".darglint]
 ignore_regex = "^_(.*)"
 
 [nitpick.files."setup.cfg"]
-comma_separated_values = ["flake8.ignore", "flake8.class_attributes_order"]
+comma_separated_values = ["flake8.ignore"]
