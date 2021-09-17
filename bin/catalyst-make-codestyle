@@ -41,6 +41,10 @@ while (( "$#" )); do
       LINE_LENGTH=$2
       shift 2
       ;;
+    -l=*|--line-length=*)
+      LINE_LENGTH="${1#*=}"
+      shift
+      ;;
     --skip-isort)
       SKIP_ISORT="true"
       shift
